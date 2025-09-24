@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ACME</title>
+<script src="./scripts/products.js"></script>
+<script src="./scripts/storeFront.js"></script>
+
+<style>
+  /* ===== Reset & Base ===== */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:Arial,Helvetica,sans-serif;background:#fafafa;color:#333;line-height:1.4;}
+
+  /* ===== Header / Logo ===== */
+  headerOld{background:black;color:#fff;padding:1.2rem;text-align:left;justify-content:left;align-items:left;gap:.5rem;}
+
+  div {
+      display: block;
+      unicode-bidi: isolate;
+  }
+
+  header{
+    color: #000;
+    display: flex;
+    flex-direction: column;
+    font-family: Roboto,Arial,Helvetica,sans-serif;
+    font-size: inherit;
+    font-weight: 400;
+    line-height: normal;
+    --vvh: 6.98px;
+    --vvw: 4.13px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    display: block;
+  }
+
+  .headerPrimary {
+    padding: 10px;
+    background-color: black;
+  }
+
+  .headerSecondary {
+    overflow: auto;
+    padding: 0 32px;
+    background-color: #29333b;
+  }
+
+  input {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+  }
+  .searchContainer {
+    box-sizing: border-box;
+    float: none;
+    float: left;
+    padding: 0;
+    width: 100%;
+    flex-grow: 1;
+    width: 49%;    
+  }
+  .searchFieldContainer {
+    margin: 8px;
+    position: relative;
+  }
+  .searchField {
+    background-color: #fff;
+    border: 2px solid transparent;
+    border-radius: 2px 0 0 2px;
+    font-size: 14px;
+    height: 40px;
+    padding: 0 16px;
+    width: 100%;
+  }
+  .searchButton {
+    align-items: center;
+    background-color: #c8102e;
+    border-radius: 0 2px 2px 0;
+    border-width: 0;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 40px;
+  }
+  .logo {font-weight:900;font-size:2rem;letter-spacing:4px;}
+  img.logo{width: 100px }
+  
+  /* ===== Layout ===== */
+  .container{max-width:1100px;margin:2rem auto;padding:0 1rem;}
+  .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;}
+
+  /* ===== Product Card ===== */
+  .card{background:#fff;border-radius:10px;box-shadow:0 2px 6px rgba(0,0,0,.1);padding:1rem;display:flex;flex-direction:column;align-items:center;transition:transform .15s ease;}
+  .card:hover{transform:translateY(-4px);}
+  .card img{width:100%;height:150px;object-fit:contain;border-radius:6px;}
+  .card h3{font-size:1.1rem;margin:.75rem 0 .25rem;}
+  .card p{margin-bottom:.5rem;}
+  .card button{margin-top:auto;padding:.55rem 1.1rem;border:none;background:#0d47a1;color:#fff;border-radius:5px;cursor:pointer;font-weight:bold;}
+  .card button:hover{background:#1565c0;}
+
+  /* ===== Cart Floating Button ===== */
+  .cart-btn{position:fixed;top:1rem;right:1rem;background:#0d47a1;color:#fff;border:none;padding:.8rem 1.3rem;border-radius:50px;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);font-weight:bold;z-index:1000;}
+
+  /* ===== Slide-In Cart Drawer ===== */
+  #cartDrawer{position:fixed;top:0;right:-420px;width:420px;height:100%;background:#fff;box-shadow:-2px 0 8px rgba(0,0,0,.2);padding:1.5rem;transition:right .3s ease;display:flex;flex-direction:column;z-index:999;}
+  #cartDrawer.open{right:0;}
+  #cartDrawer h2{margin-bottom:1rem;}
+  #cartItems{flex:1;overflow-y:auto;margin-bottom:1rem;border-top:1px solid #eee;padding-top:.75rem;}
+  .item-row{display:flex;justify-content:space-between;margin-bottom:.5rem;}
+  .checkout{background:#0d47a1;color:#fff;padding:1rem;border:none;border-radius:6px;cursor:pointer;width:100%;font-size:1rem;font-weight:bold;}
+  .checkout:hover{background:#1565c0;}
+
+</style>
+</head>
+<body>
+  <header>
+    <div class="headerPrimary">
+      <img class="logo" src="./images/ACME Logo.png" alt="Logo">
+    </div>
+    <div class="headerSecondary">
+      <div class="searchContainer">
+        <div class="searchFieldContainer">
+          <input accesskey="/" aria-label="Search Query" autocomplete="off" class="searchField" name="searchField" title="Search" placeholder="Enter keyword, item, model or part #">
+          <button aria-label="Submit Search Query" class="searchButton" type="submit">
+            <div class="gcom__typeahead-submit-icon">
+              <div class="icons ">
+                <svg aria-hidden="true" class="icons__search" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <path d="M15.55125,10.078 C15.55125,11.543 14.98325,12.917 13.95025,13.948 C11.81525,16.084 8.34125,16.084 6.20525,13.948 C5.17325,12.917 4.60425,11.543 4.60425,10.078 C4.60425,8.613 5.17325,7.238 6.20525,6.207 C7.23825,5.174 8.61325,4.605 10.07725,4.605 C11.54225,4.605 12.91725,5.174 13.95025,6.207 C14.98325,7.238 15.55125,8.613 15.55125,10.078 M21.60325,19.691 L16.66325,14.752 C18.93425,11.56 18.58725,7.159 15.79225,4.363 C14.26825,2.84 12.23825,2.001 10.07725,2 L10.07725,2 C7.91525,2 5.88625,2.84 4.36325,4.363 C1.21225,7.515 1.21225,12.641 4.36325,15.793 C5.88725,17.315 7.91625,18.154 10.07725,18.154 C11.74525,18.154 13.39025,17.627 14.75025,16.665 L19.69025,21.605 C19.95425,21.868 20.30125,22 20.64725,22 C20.99325,22 21.34025,21.868 21.60325,21.605 C21.85925,21.349 21.99925,21.01 21.99925,20.648 C21.99925,20.287 21.85925,19.948 21.60325,19.691" fill="#FFFFFF"></path>
+                    </g>
+                </svg>
+              </div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="products" id="productGrid"></div>
+  </div>
+
+  <button class="cart-btn" id="openCart">🛒 Cart (<span id="cartCount">0</span>)</button>
+
+  <div id="cartDrawer">
+    <h2>Your Cart</h2>
+    <div id="cartItems"></div>
+    <strong style="margin-bottom:.75rem;">Total: $<span id="cartTotal">0.00</span></strong>
+    <button class="checkout" id="checkoutBtn">Checkout</button>
+  </div>
+
+</body>
+</html>
